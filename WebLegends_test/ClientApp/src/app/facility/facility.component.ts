@@ -77,7 +77,7 @@ export class FacilityComponent implements OnInit {
 
   deleteFacility(p: Facility) {
     this.facilityService.deleteFacility(p.id)
-      .subscribe(() => this.loadLogs(this.facility.id));
+      .subscribe(() =>  this.router.navigate(['']));
   }
 
   deleteLog(p: Log) {
@@ -93,5 +93,10 @@ export class FacilityComponent implements OnInit {
   previouspage() {
     this.pageNumber-=1;
     this.loadLogs(this.facility.id);
+  }
+
+  deleteAllLog(facility: Facility) {
+    this.logService.deleteAllLog(facility.id)
+      .subscribe(() => this.loadLogs(this.facility.id));
   }
 }
