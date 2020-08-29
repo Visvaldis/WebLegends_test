@@ -12,5 +12,7 @@ namespace WebLegends_test.BLL.Interfaces
 		ICollection<FacilityLogDTO> GetWithFilter(Expression<Func<FacilityLog, bool>> filter);
 		ICollection<FacilityLogDTO> GetByFacility(string name);
 		ICollection<FacilityLogDTO> GetByFacilityId(int id);
+		void DeleteByFacility(int facilityId);
+
 	}
 }

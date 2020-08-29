@@ -10,7 +10,7 @@ using WebLegends_test.BLL.Interfaces;
 
 namespace WebLegends_test.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/logs")]
 	[ApiController]
 	public class FacilitiesLogController : ControllerBase
 	{
@@ -53,39 +53,6 @@ namespace WebLegends_test.Controllers
 			}
 		}
 
-		// POST api/statuses
-		[HttpPost]
-		public ActionResult Create([FromBody] FacilityLogDTO item)
-		{
-			if (!ModelState.IsValid)
-				return BadRequest(ModelState);
-			try
-			{
-				int logId = logService.Add(item);
-				item.Id = logId;
-
-				return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
-			}
-			catch (ArgumentNullException ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
-
-		// PUT api/statuses/5
-		[HttpPut("{id}")]
-		public ActionResult Update(int id, [FromBody] FacilityLogDTO item)
-		{
-			if (!ModelState.IsValid)
-				return BadRequest(ModelState);
-			if (!logService.Exist(id))
-				return NotFound();
-
-			item.Id = id;
-			logService.Update(item);
-			return Ok();
-		}
-
 		// DELETE api/statuses/5
 		[HttpDelete("{id}")]
 		public ActionResult Delete(int id)
@@ -114,6 +81,16 @@ namespace WebLegends_test.Controllers
 			{
 				return NotFound();
 			}
+		}
+
+		[HttpDelete("facility/{id}")]
+		public ActionResult<IEnumerable<FacilityLogDTO>> DeleteByFacility(int id)
+		{
+			if (id < 0)
+				return BadRequest("Id is negative");
+			logService.DeleteByFacility(id);
+			return NoContent();
+
 		}
 
 	}

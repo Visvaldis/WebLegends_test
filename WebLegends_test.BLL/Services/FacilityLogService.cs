@@ -85,5 +85,15 @@ namespace WebLegends_test.BLL.Services
 			Database.Logs.Update(Mapper.Map<FacilityLogDTO, FacilityLog>(item));
 			Database.Save();
 		}
+
+		public void DeleteByFacility(int facilityId)
+		{
+			var logs = GetByFacilityId(facilityId);
+			foreach (var item in logs)
+			{
+				Database.Logs.Delete(item.Id);
+			}
+			Database.Save();
+		}
 	}
 }
