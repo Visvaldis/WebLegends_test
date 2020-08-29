@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WebLegends_test.BLL.DTO
 {
-	class FacilityDTO
+	public class FacilityDTO
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
