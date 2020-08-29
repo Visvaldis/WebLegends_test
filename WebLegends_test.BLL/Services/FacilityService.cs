@@ -111,11 +111,11 @@ namespace WebLegends_test.BLL.Services
 
 		public ICollection<FacilityDTO> GetPage(int PageNumber, int PageSize)
 		{
-			var list = Database.Facilities.GetAll()
-				.OrderBy(on => on.Name)
+			var query = Database.Facilities.GetAll();
+			var page = query.OrderBy(on => on.Name)
 				.Skip((PageNumber - 1) * PageSize)
-				.Take(PageSize)
-				.ToList();
+				.Take(PageSize);
+			var list = page.ToList();
 			return Mapper.Map<IEnumerable<Facility>, List<FacilityDTO>>
 				(list);
 		}

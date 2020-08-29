@@ -48,7 +48,7 @@ namespace WebLegends_test.DAL.Repositories
 				.FirstOrDefault(x => x.Id == id);
 		}
 
-		public IEnumerable<Facility> GetAll()
+		public IQueryable<Facility> GetAll()
 		{
 			return GetAllQuary();
 		}
