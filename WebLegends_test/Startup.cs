@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebLegends_test.BLL.Infrastructure;
+using WebLegends_test.BLL.Interfaces;
+using WebLegends_test.BLL.Services;
 
 namespace WebLegend_test
 {
@@ -24,8 +26,12 @@ namespace WebLegend_test
         {
             // получаем строку подключения из файла конфигурации
             string connection = Configuration.GetConnectionString("DefaultConnection");
-
             services.AddUnitOfWorkService(connection);
+
+            services.AddScoped<IFacilityService, FacilityService>();
+            services.AddScoped<IFacilityLogService, FacilityLogService>();
+            services.AddScoped<IFacilityStatusService, FacilityStatusService>();
+
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

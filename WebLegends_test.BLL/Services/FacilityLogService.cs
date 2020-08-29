@@ -12,7 +12,7 @@ using WebLegends_test.DAL.Interfaces;
 
 namespace WebLegends_test.BLL.Services
 {
-	class FacilityLogService : IFacilityLogService
+	public class FacilityLogService : IFacilityLogService
 	{
 		IUnitOfWork Database { get; set; }
 		IMapper Mapper { get; set; }
