@@ -6,7 +6,7 @@ using WebLegends_test.DAL.Entities;
 
 namespace WebLegends_test.DAL.Interfaces
 {
-	public interface IUnitOfWork
+	public interface IUnitOfWork :IDisposable
 	{
 		IRepository<Facility> Facilities { get; }
 		IRepository<FacilityLog> Logs { get; }

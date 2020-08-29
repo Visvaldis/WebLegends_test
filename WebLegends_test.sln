@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebLegends_test", "WebLegends_test\WebLegends_test.csproj", "{89850042-BBD0-44A8-9A3F-FFBF6B458C52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebLegends_test.DAL", "WebLegends_test.DAL\WebLegends_test.DAL.csproj", "{2AB3FB1D-A867-412A-9BF5-A3CC71424E4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebLegends_test.DAL", "WebLegends_test.DAL\WebLegends_test.DAL.csproj", "{2AB3FB1D-A867-412A-9BF5-A3CC71424E4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebLegends_test.BLL", "WebLegends_test.BLL\WebLegends_test.BLL.csproj", "{9791AD23-6FF2-47FA-A3D0-185CE2425D49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{2AB3FB1D-A867-412A-9BF5-A3CC71424E4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AB3FB1D-A867-412A-9BF5-A3CC71424E4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AB3FB1D-A867-412A-9BF5-A3CC71424E4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9791AD23-6FF2-47FA-A3D0-185CE2425D49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9791AD23-6FF2-47FA-A3D0-185CE2425D49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9791AD23-6FF2-47FA-A3D0-185CE2425D49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9791AD23-6FF2-47FA-A3D0-185CE2425D49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

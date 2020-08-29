@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -59,7 +60,7 @@ namespace WebLegends_test.DAL.Repositories
 
 		private IQueryable<FacilityLog> GetAllQuary()
 		{
-			return db.Logs;
+			return db.Logs.Include(x => x.Facility).ThenInclude(x => x.Status);
 		}
 	}
 }

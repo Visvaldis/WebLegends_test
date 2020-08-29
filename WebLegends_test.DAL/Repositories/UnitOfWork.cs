@@ -11,9 +11,9 @@ namespace WebLegends_test.DAL.Repositories
 {
 	public class UnitOfWork : IUnitOfWork
 	{
-		public UnitOfWork(DbContextOptions<EfContext> options)
+		public UnitOfWork(EfContext _context)
 		{
-			db = new EfContext(options);
+			db = _context;
 
 		}
 		private EfContext db;
@@ -63,5 +63,22 @@ namespace WebLegends_test.DAL.Repositories
 			db.SaveChanges();
 		}
 
+		private bool disposed = false;
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this.disposed)
+			{
+				if (disposing)
+				{
+					db.Dispose();
+				}
+			}
+			this.disposed = true;
+		}
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
 	}
 }
