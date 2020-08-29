@@ -3,6 +3,9 @@ import {Facility} from "../../models/facility";
 import {StatusService} from "../../services/StatusService";
 import {Status} from "../../models/status";
 import {FacilityService} from "../../services/FacilityService";
+import {NgModule, ViewChild} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {FormControl, FormGroup, ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {NgSelectModule, NgOption} from '@ng-select/ng-select';
 
 @Component({
@@ -23,6 +26,8 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.loadFacilities();    // загрузка данных при старте компонента
     this.loadStatuses();
+    console.log(this.facilities)
+
   }
   // получаем данные через сервис
   loadFacilities() {
@@ -61,4 +66,13 @@ export class HomeComponent implements OnInit {
   }
 
 
+  nextpage() {
+    this.pageNumber+=1;
+    this.loadFacilities();
+  }
+
+  previouspage() {
+    this.pageNumber-=1;
+    this.loadFacilities();
+  }
 }

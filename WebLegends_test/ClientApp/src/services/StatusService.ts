@@ -2,16 +2,14 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
-import {Facility} from "../models/facility";
-
 import {Status} from "../models/status";
-import {getBaseUrl} from "../config";
+import {getAoiUrl} from "../config";
 
 
 @Injectable()
 export class StatusService {
 
-  private url = getBaseUrl() + "/api/statuses";
+  private url = getAoiUrl() + "api/statuses";
 
   constructor(private http: HttpClient) {
   }

@@ -3,13 +3,13 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
 import {Facility} from "../models/facility";
-import {getBaseUrl} from "../config";
+import {getAoiUrl} from "../config";
 
 
 @Injectable()
 export class FacilityService {
 
-  private url = getBaseUrl() + "api/facilities";
+  private url = getAoiUrl() + "api/facilities";
 
   constructor(private http: HttpClient) {
   }
