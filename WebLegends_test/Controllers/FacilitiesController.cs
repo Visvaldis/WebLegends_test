@@ -15,12 +15,12 @@ namespace WebLegends_test.Controllers
 	public class FacilitiesController : ControllerBase
 	{
 		IFacilityService facilityService;
-	//	IFacilityStatusService statusService;
+		//	IFacilityStatusService statusService;
 
 		public FacilitiesController(IFacilityService _facilityService)
 		{
 			facilityService = _facilityService;
-	//		statusService = _statusService;
+			//		statusService = _statusService;
 		}
 		// GET: api/statuses
 		[HttpGet]
@@ -81,9 +81,9 @@ namespace WebLegends_test.Controllers
 				return BadRequest(ModelState);
 			if (!facilityService.Exist(id))
 				return NotFound();
-		//	int statusId = statusService.GetByName(item.Status.Name).Id;
+			//	int statusId = statusService.GetByName(item.Status.Name).Id;
 			item.Id = id;
-		//	item.Status.Id = statusId;
+			//	item.Status.Id = statusId;
 			facilityService.Update(item);
 			return Ok();
 		}
@@ -117,6 +117,33 @@ namespace WebLegends_test.Controllers
 			{
 				return NotFound();
 			}
+		}
+
+		[HttpGet("status/{name}")]
+		public ActionResult<IEnumerable<FacilityDTO>> GetByStatus(string name)
+		{
+			if (name is null || name == "")
+				return BadRequest("Name is null");
+			try
+			{
+				var facilities = facilityService.GetByStatus(name);
+
+				return Ok(facilities);
+			}
+			catch (ValidationException ex)
+			{
+				return NotFound();
+			}
+		}
+
+		[HttpGet("page")]
+		public ActionResult<IEnumerable<FacilityDTO>> GetPage(int number, int size)
+		{
+			if (number < 0 || size < 0)
+				return BadRequest("Number or size is negative");
+
+			var facilities = facilityService.GetPage(number, size);
+			return Ok(facilities);
 		}
 	}
 }

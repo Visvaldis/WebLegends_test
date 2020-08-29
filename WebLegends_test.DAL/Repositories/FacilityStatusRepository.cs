@@ -41,9 +41,9 @@ namespace WebLegends_test.DAL.Repositories
 				.FirstOrDefault(x => x.Id == id);
 		}
 
-		public IEnumerable<FacilityStatus> GetAll()
+		public IQueryable<FacilityStatus> GetAll()
 		{
-			return GetAllQuary().ToArray();
+			return GetAllQuary();
 		}
 
 		public void Update(FacilityStatus item)

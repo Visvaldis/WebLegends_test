@@ -12,5 +12,7 @@ namespace WebLegends_test.BLL.Interfaces
 		ICollection<FacilityDTO> GetWithFilter(Expression<Func<Facility, bool>> filter);
 		ICollection<FacilityDTO> GetByName(string name);
 		ICollection<FacilityDTO> GetByStatus(string status);
+		ICollection<FacilityDTO> GetPage(int PageNumber, int PageSize);
+
 	}
 }

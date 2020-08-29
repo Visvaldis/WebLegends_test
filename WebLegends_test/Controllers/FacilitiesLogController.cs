@@ -93,5 +93,15 @@ namespace WebLegends_test.Controllers
 
 		}
 
+		[HttpGet("page")]
+		public ActionResult<IEnumerable<FacilityLogDTO>> GetPage(int number, int size)
+		{
+			if (number < 0 || size < 0)
+				return BadRequest("Number or size is negative");
+
+			var facilities = logService.GetPage(number, size);
+			return Ok(facilities);
+		}
+
 	}
 }

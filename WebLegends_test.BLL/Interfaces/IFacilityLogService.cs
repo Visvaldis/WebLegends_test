@@ -13,6 +13,6 @@ namespace WebLegends_test.BLL.Interfaces
 		ICollection<FacilityLogDTO> GetByFacility(string name);
 		ICollection<FacilityLogDTO> GetByFacilityId(int id);
 		void DeleteByFacility(int facilityId);
-
+		ICollection<FacilityLogDTO> GetPage(int PageNumber, int PageSize);
 	}
 }

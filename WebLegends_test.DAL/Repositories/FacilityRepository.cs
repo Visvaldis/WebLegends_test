@@ -50,7 +50,7 @@ namespace WebLegends_test.DAL.Repositories
 
 		public IEnumerable<Facility> GetAll()
 		{
-			return GetAllQuary().ToArray();
+			return GetAllQuary();
 		}
 
 		public void Update(Facility item)

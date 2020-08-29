@@ -108,5 +108,16 @@ namespace WebLegends_test.BLL.Services
 		{
 			return GetWithFilter(x => x.Status.Name == status);
 		}
+
+		public ICollection<FacilityDTO> GetPage(int PageNumber, int PageSize)
+		{
+			var list = Database.Facilities.GetAll()
+				.OrderBy(on => on.Name)
+				.Skip((PageNumber - 1) * PageSize)
+				.Take(PageSize)
+				.ToList();
+			return Mapper.Map<IEnumerable<Facility>, List<FacilityDTO>>
+				(list);
+		}
 	}
 }

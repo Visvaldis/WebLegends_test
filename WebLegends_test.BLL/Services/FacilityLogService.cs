@@ -95,5 +95,16 @@ namespace WebLegends_test.BLL.Services
 			}
 			Database.Save();
 		}
+
+		public ICollection<FacilityLogDTO> GetPage(int PageNumber, int PageSize)
+		{
+			var list = Database.Logs.GetAll()
+				.OrderBy(on => on.ChangeDate)
+				.Skip((PageNumber - 1) * PageSize)
+				.Take(PageSize)
+				.ToList();
+			return Mapper.Map<IEnumerable<FacilityLog>, List<FacilityLogDTO>>
+				(list);
+		}
 	}
 }
