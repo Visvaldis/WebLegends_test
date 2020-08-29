@@ -15,11 +15,12 @@ namespace WebLegends_test.Controllers
 	public class FacilitiesController : ControllerBase
 	{
 		IFacilityService facilityService;
-		public FacilitiesController(IFacilityService service)
+	//	IFacilityStatusService statusService;
+
+		public FacilitiesController(IFacilityService _facilityService)
 		{
-			facilityService = service;
-
-
+			facilityService = _facilityService;
+	//		statusService = _statusService;
 		}
 		// GET: api/statuses
 		[HttpGet]
@@ -80,8 +81,9 @@ namespace WebLegends_test.Controllers
 				return BadRequest(ModelState);
 			if (!facilityService.Exist(id))
 				return NotFound();
-
+		//	int statusId = statusService.GetByName(item.Status.Name).Id;
 			item.Id = id;
+		//	item.Status.Id = statusId;
 			facilityService.Update(item);
 			return Ok();
 		}
@@ -100,5 +102,21 @@ namespace WebLegends_test.Controllers
 
 		}
 
+		[HttpGet("search/{name}")]
+		public ActionResult<IEnumerable<FacilityDTO>> GetByName(string name)
+		{
+			if (name is null || name == "")
+				return BadRequest("Name is null");
+			try
+			{
+				var facilities = facilityService.GetByName(name);
+
+				return Ok(facilities);
+			}
+			catch (ValidationException ex)
+			{
+				return NotFound();
+			}
+		}
 	}
 }

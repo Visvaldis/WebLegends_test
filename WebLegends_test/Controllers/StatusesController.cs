@@ -100,5 +100,22 @@ namespace WebLegends_test.Controllers
 			return NoContent();
 
 		}
+
+		[HttpGet("search/{name}")]
+		public ActionResult<IEnumerable<FacilityStatusDTO>> GetByName(string name)
+		{
+			if (name is null || name == "")
+				return BadRequest("Name is null");
+			try
+			{
+				var statuses = statusService.GetByName(name);
+
+				return Ok(statuses);
+			}
+			catch (ValidationException ex)
+			{
+				return NotFound();
+			}
+		}
 	}
 }

@@ -24,10 +24,16 @@ namespace WebLegends_test.BLL.Services
 		public int Add(FacilityStatusDTO item)
 		{
 			if (item == null)
-				throw new ArgumentNullException("Facility is null. Try again.");
-			var status = Mapper.Map<FacilityStatusDTO, FacilityStatus>(item);
-			int id = Database.Statuses.Create(status);
-			return id;
+				throw new ArgumentNullException("Facility status is null. Try again.");
+
+			var status = Database.Statuses.Find(x => x.Name.ToLower() == item.Name.ToLower()).FirstOrDefault();
+			if (status != default(FacilityStatus))
+				throw new ValidationException(status.Id.ToString());
+			else
+			{
+				int id = Database.Statuses.Create(Mapper.Map<FacilityStatusDTO, FacilityStatus>(item));
+				return id;
+			}
 		}
 		public void Delete(int id)
 		{
@@ -64,9 +70,9 @@ namespace WebLegends_test.BLL.Services
 
 		}
 
-		public ICollection<FacilityStatusDTO> GetByName(string name)
+		public FacilityStatusDTO GetByName(string name)
 		{
-			return GetWithFilter(x => x.Name.Contains(name));
+			return GetWithFilter(x => x.Name.Contains(name)).FirstOrDefault();
 		}
 
 		public ICollection<FacilityStatusDTO> GetWithFilter(Expression<Func<FacilityStatus, bool>> filter)

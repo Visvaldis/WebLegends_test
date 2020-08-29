@@ -19,6 +19,12 @@ namespace WebLegends_test.DAL.Repositories
 		}
 		public int Create(FacilityLog item)
 		{
+			var fasility = db.Facilities.FirstOrDefault(t => t.Name == item.Facility.Name);
+			if (fasility != null)
+			{
+				item.Facility = fasility;
+			}
+
 			db.Logs.Add(item);
 			db.SaveChanges();
 			return item.Id;
@@ -53,6 +59,11 @@ namespace WebLegends_test.DAL.Repositories
 			if (entity == null)
 			{
 				return;
+			}
+			var fasility = db.Facilities.FirstOrDefault(t => t.Name == item.Facility.Name);
+			if (fasility != null)
+			{
+				item.Facility = fasility;
 			}
 			db.Entry(entity).CurrentValues.SetValues(item);
 		}

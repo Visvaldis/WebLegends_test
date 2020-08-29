@@ -19,6 +19,12 @@ namespace WebLegends_test.DAL.Repositories
 		}
 		public int Create(Facility item)
 		{
+			var status = db.Statuses.FirstOrDefault(t => t.Name == item.Status.Name);
+			if (status != null)
+			{
+				item.Status = status;
+
+			}
 			db.Facilities.Add(item);
 			db.SaveChanges();
 			return item.Id;
@@ -53,6 +59,12 @@ namespace WebLegends_test.DAL.Repositories
 			if (entity == null)
 			{
 				return;
+			}
+			var status = db.Statuses.FirstOrDefault(t => t.Name == item.Status.Name);
+			if (status != null)
+			{
+				entity.Status = status;
+
 			}
 			db.Entry(entity).CurrentValues.SetValues(item);
 		}

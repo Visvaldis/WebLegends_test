@@ -10,6 +10,6 @@ namespace WebLegends_test.BLL.Interfaces
 	public interface IFacilityStatusService:IService<FacilityStatusDTO>
 	{
 		ICollection<FacilityStatusDTO> GetWithFilter(Expression<Func<FacilityStatus, bool>> filter);
-		ICollection<FacilityStatusDTO> GetByName(string name);
+		FacilityStatusDTO GetByName(string name);
 	}
 }

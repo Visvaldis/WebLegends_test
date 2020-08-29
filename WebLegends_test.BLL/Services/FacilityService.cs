@@ -80,8 +80,28 @@ namespace WebLegends_test.BLL.Services
 
 		public void Update(FacilityDTO item)
 		{
-			Database.Facilities.Update(Mapper.Map<FacilityDTO, Facility>(item));
+			var oldItem = Database.Facilities.Get(item.Id);
+			var newItem = Mapper.Map<FacilityDTO, Facility>(item);
+			var props = typeof(FacilityDTO).GetProperties();
+			List<FacilityLog> logs = new List<FacilityLog>();
+			foreach (var prop in oldItem.GetType().GetProperties())
+			{
+				var oldOne = prop.GetValue(oldItem, null);
+				var newOne = prop.GetValue(newItem);
+				if(!oldOne.Equals(newOne))
+				{
+					logs.Add(
+						new FacilityLog { Facility=newItem, FieldName=prop.Name,
+							NewValue=newOne.ToString(), OldValue=oldOne.ToString(), 
+							ChangeDate=DateTime.Now });
+				}
+			}
+			Database.Facilities.Update(newItem);
 			Database.Save();
+			foreach (var log in logs)
+			{
+				Database.Logs.Create(log);
+			}
 		}
 
 		public ICollection<FacilityDTO> GetByStatus(string status)

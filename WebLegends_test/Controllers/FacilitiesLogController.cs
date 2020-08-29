@@ -99,5 +99,22 @@ namespace WebLegends_test.Controllers
 			return NoContent();
 
 		}
+
+		[HttpGet("facility/{name:alpha}")]
+		public ActionResult<IEnumerable<FacilityLogDTO>> GetByFacility(string name)
+		{
+			if (name is null || name == "")
+				return BadRequest("Name is null");
+			try
+			{
+				var facilities = logService.GetByFacility(name);
+				return Ok(facilities);
+			}
+			catch (ValidationException ex)
+			{
+				return NotFound();
+			}
+		}
+
 	}
 }
