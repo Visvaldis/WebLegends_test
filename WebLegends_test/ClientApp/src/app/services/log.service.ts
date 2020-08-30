@@ -5,14 +5,14 @@ import { map } from 'rxjs/operators';
 import {Facility} from "../models/facility";
 import {getAoiUrl} from "../config";
 import {Log} from "../models/log";
+import {BaseRestService} from "./base-rest.service";
 
 
 @Injectable()
-export class LogService {
+export class LogService extends BaseRestService<Log>{
 
-  private url = getAoiUrl() + "api/logs";
-
-  constructor(private http: HttpClient) {
+  constructor(http: HttpClient) {
+    super(http, "api/logs");
   }
 
   getAllLogPage(pageNumber: number, pageSize: number): Observable<Log[]>{
@@ -29,11 +29,6 @@ export class LogService {
     ));
   }
 
-
-
-  deleteLog(id: number) {
-    return this.http.delete(this.url + '/' + id);
-  }
   deleteAllLog(facilityId: number) {
     return this.http.delete(this.url + '/facility/' + facilityId);
   }
