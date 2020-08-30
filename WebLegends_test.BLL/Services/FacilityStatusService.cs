@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using WebLegends_test.BLL.DTO;
 using WebLegends_test.BLL.Infrastructure;
 using WebLegends_test.BLL.Interfaces;
@@ -12,82 +13,76 @@ using WebLegends_test.DAL.Interfaces;
 
 namespace WebLegends_test.BLL.Services
 {
-	public class FacilityStatusService : IFacilityStatusService
+	public class FacilityStatusService : BaseService, IFacilityStatusService
 	{
-		IUnitOfWork Database { get; set; }
-		IMapper Mapper { get; set; }
-		public FacilityStatusService(IUnitOfWork uow)
-		{
-			Database = uow;
-			Mapper = Mappers.FacilityMapper;
-		}
-		public int Add(FacilityStatusDTO item)
+		public FacilityStatusService(IUnitOfWork unitOfWork) : base(unitOfWork)
+		{ }
+
+		public async Task<int> Create(FacilityStatusDTO item)
 		{
 			if (item == null)
 				throw new ArgumentNullException("Facility status is null. Try again.");
 
-			var status = Database.Statuses.Find(x => x.Name.ToLower() == item.Name.ToLower()).FirstOrDefault();
+			var status = await unitOfWork.FacilityStatuses.Find(x => x.Name.ToLower() == item.Name.ToLower());
 			if (status != default(FacilityStatus))
 				throw new ValidationException(status.Id.ToString());
 			else
 			{
-				int id = Database.Statuses.Create(Mapper.Map<FacilityStatusDTO, FacilityStatus>(item));
+				int id = await unitOfWork.FacilityStatuses.Create(mapper.Map<FacilityStatusDTO, FacilityStatus>(item));
 				return id;
 			}
 		}
-		public void Delete(int id)
+		public async Task Delete(int id)
 		{
-			Database.Statuses.Delete(id);
-			Database.Save();
+			await unitOfWork.FacilityStatuses.Delete(id);
+			await unitOfWork.SaveAsync();
 		}
 
 		public void Dispose()
 		{
-			Database.Dispose();
+			unitOfWork.Dispose();
 		}
 
-		public bool Exist(int id)
+		public async Task<bool> Exist(int id)
 		{
-			var status = Database.Statuses.Get(id);
+			var status = await unitOfWork.FacilityStatuses.Get(id);
 			return !(status == null);
 		}
 
-		public FacilityStatusDTO Get(int id)
+		public async Task<FacilityStatusDTO> Get(int id)
 		{
-			var status = Database.Statuses.Get(id);
+			var  status = await unitOfWork.FacilityStatuses.Get(id);
 			if (status == null)
 				throw new ValidationException("Status is not found");
 
-			return Mapper.Map<FacilityStatus, FacilityStatusDTO>(status);
+			return mapper.Map<FacilityStatus, FacilityStatusDTO>(status);
 
 		}
 
-		public ICollection<FacilityStatusDTO> GetAll()
+		public async Task<ICollection<FacilityStatusDTO>> GetAll()
 		{
-			var query = Database.Statuses.GetAll();
-			var statuses = query.ToList();
-			return Mapper.Map<IEnumerable<FacilityStatus>, List<FacilityStatusDTO>>(statuses);
+			var statuses = await unitOfWork.FacilityStatuses.GetAll();
+			return mapper.Map<IEnumerable<FacilityStatus>, List<FacilityStatusDTO>>(statuses);
 
 		}
 
-		public FacilityStatusDTO GetByName(string name)
+		public async Task<FacilityStatusDTO> GetByName(string name)
 		{
-			return GetWithFilter(x => x.Name.Contains(name)).FirstOrDefault();
+			var item = await unitOfWork.FacilityStatuses.Find(x => x.Name.Contains(name));
+			return mapper.Map<FacilityStatus, FacilityStatusDTO>(item);
 		}
 
-		public ICollection<FacilityStatusDTO> GetWithFilter(Expression<Func<FacilityStatus, bool>> filter)
+		public async Task<ICollection<FacilityStatusDTO>> GetWithFilter(Expression<Func<FacilityStatus, bool>> filter)
 		{
-			var a = Database.Statuses.Find(filter);
-			var list = a.AsEnumerable<FacilityStatus>();
-			return Mapper.Map<IEnumerable<FacilityStatus>, List<FacilityStatusDTO>>
-				(list);
+			var list = await unitOfWork.FacilityStatuses.Filter(filter);
+			return mapper.Map<IEnumerable<FacilityStatus>, List<FacilityStatusDTO>>(list);
 
 		}
 
-		public void Update(FacilityStatusDTO item)
+		public async Task Update(FacilityStatusDTO item)
 		{
-			Database.Statuses.Update(Mapper.Map<FacilityStatusDTO, FacilityStatus>(item));
-			Database.Save();
+			await unitOfWork.FacilityStatuses.Update(mapper.Map<FacilityStatusDTO, FacilityStatus>(item));
+			await unitOfWork.SaveAsync();
 		}
 	}
 }

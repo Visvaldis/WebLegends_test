@@ -9,6 +9,11 @@ code {
   color: #e01a76;
 }
 
+html,
+body {
+  height: 100%;
+  background-color: #e0e5ec;
+}
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;

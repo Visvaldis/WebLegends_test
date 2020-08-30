@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using WebLegends_test.BLL.DTO;
 using WebLegends_test.DAL.Entities;
 
@@ -9,10 +10,9 @@ namespace WebLegends_test.BLL.Interfaces
 {
 	public interface IFacilityLogService :IService<FacilityLogDTO>
 	{
-		ICollection<FacilityLogDTO> GetWithFilter(Expression<Func<FacilityLog, bool>> filter);
-		ICollection<FacilityLogDTO> GetByFacility(string name);
-		ICollection<FacilityLogDTO> GetByFacilityId(int id);
-		void DeleteByFacility(int facilityId);
-		ICollection<FacilityLogDTO> GetPage(int PageNumber, int PageSize);
+		Task<ICollection<FacilityLogDTO>> GetWithFilter(Expression<Func<FacilityLog, bool>> filter);
+		Task DeleteByFacility(int facilityId);
+		Task<ICollection<FacilityLogDTO>> GetByFacilityPage(int facilityId, int pageNumber, int pageSize);
+		Task<ICollection<FacilityLogDTO>> GetPage(int pageNumber, int pageSize);
 	}
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebLegends_test.DAL.Context;
 
 namespace WebLegends_test.DAL.Migrations
 {
     [DbContext(typeof(EfContext))]
-    partial class EfContextModelSnapshot : ModelSnapshot
+    [Migration("20200829181234_Changed delete behavior")]
+    partial class Changeddeletebehavior
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,7 +64,10 @@ namespace WebLegends_test.DAL.Migrations
                     b.Property<DateTime>("ChangeDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FacilityId")
+                    b.Property<int?>("FacilityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FacilityId1")
                         .HasColumnType("int");
 
                     b.Property<string>("FieldName")
@@ -78,6 +83,10 @@ namespace WebLegends_test.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
+
+                    b.HasIndex("FacilityId1");
 
                     b.ToTable("FacilityLogs");
                 });
@@ -120,6 +129,18 @@ namespace WebLegends_test.DAL.Migrations
                     b.HasOne("WebLegends_test.DAL.Entities.FacilityStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId");
+                });
+
+            modelBuilder.Entity("WebLegends_test.DAL.Entities.FacilityLog", b =>
+                {
+                    b.HasOne("WebLegends_test.DAL.Entities.Facility", "Facility")
+                        .WithMany()
+                        .HasForeignKey("FacilityId");
+
+                    b.HasOne("WebLegends_test.DAL.Entities.Facility", null)
+                        .WithMany()
+                        .HasForeignKey("FacilityId1")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

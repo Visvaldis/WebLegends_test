@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using WebLegends_test.BLL.DTO;
 using WebLegends_test.BLL.Infrastructure;
 using WebLegends_test.BLL.Interfaces;
@@ -12,98 +13,98 @@ using WebLegends_test.DAL.Interfaces;
 
 namespace WebLegends_test.BLL.Services
 {
-	public class FacilityLogService : IFacilityLogService
+	public class FacilityLogService : BaseService, IFacilityLogService
 	{
-		IUnitOfWork Database { get; set; }
-		IMapper Mapper { get; set; }
-		public FacilityLogService(IUnitOfWork uow)
-		{
-			Database = uow;
-			Mapper = Mappers.FacilityMapper;
-		}
-		public int Add(FacilityLogDTO item)
+		public FacilityLogService(IUnitOfWork unitOfWork) : base(unitOfWork)
+		{ }
+		public async Task<int> Create(FacilityLogDTO item)
 		{
 			if (item == null)
 				throw new ArgumentNullException("Facility log is null. Try again.");
-			var facilityLog = Mapper.Map<FacilityLogDTO, FacilityLog>(item);
-			int id = Database.Logs.Create(facilityLog);
+			var facilityLog = mapper.Map<FacilityLogDTO, FacilityLog>(item);
+			int id = await unitOfWork.FacilityLogs.Create(facilityLog);
 			return id;
 		}
 
-		public void Delete(int id)
+		public async Task Delete(int id)
 		{
-			Database.Logs.Delete(id);
-			Database.Save();
+			await unitOfWork.FacilityLogs.Delete(id);
+			await unitOfWork.SaveAsync();
 		}
 		public void Dispose()
 		{
-			Database.Dispose();
+			unitOfWork.Dispose();
 		}
 
-		public bool Exist(int id)
+		public async Task<bool> Exist(int id)
 		{
-			var facilityLog = Database.Logs.Get(id);
+			var facilityLog = await unitOfWork.FacilityLogs.Get(id);
 			return !(facilityLog == null);
 		}
 
-		public FacilityLogDTO Get(int id)
+		public async Task<FacilityLogDTO> Get(int id)
 		{
-			var facilityLog = Database.Logs.Get(id);
+			var facilityLog = await unitOfWork.FacilityLogs.Get(id);
 			if (facilityLog == null)
 				throw new ValidationException("Facility log is not found");
 
-			return Mapper.Map<FacilityLog, FacilityLogDTO>(facilityLog);
+			return mapper.Map<FacilityLog, FacilityLogDTO>(facilityLog);
 
 		}
 
-		public ICollection<FacilityLogDTO> GetAll()
+		public async Task<ICollection<FacilityLogDTO>> GetAll()
 		{
-			var query = Database.Logs.GetAll();
-			var facilitiesLogs = query.ToList();
-			return Mapper.Map<IEnumerable<FacilityLog>, List<FacilityLogDTO>>(facilitiesLogs);
+			var facilitiesLogs = await unitOfWork.FacilityLogs.GetAll();
+			return mapper.Map<IEnumerable<FacilityLog>, List<FacilityLogDTO>>(facilitiesLogs);
 		}
 
-		public ICollection<FacilityLogDTO> GetByFacility(string name)
-		{
-			return GetWithFilter(x => x.Facility.Name ==name);
-		}
-		public ICollection<FacilityLogDTO> GetByFacilityId(int id)
-		{
-			return GetWithFilter(x => x.Facility.Id == id);
-		}
 
-		public ICollection<FacilityLogDTO> GetWithFilter(Expression<Func<FacilityLog, bool>> filter)
+		public async Task<ICollection<FacilityLogDTO>> GetWithFilter(Expression<Func<FacilityLog, bool>> filter)
 		{
-			var a = Database.Logs.Find(filter);
-			var list = a.AsEnumerable<FacilityLog>();
-			return Mapper.Map<IEnumerable<FacilityLog>, List<FacilityLogDTO>>
+			var list = await unitOfWork.FacilityLogs.Filter(filter);
+			return mapper.Map<IEnumerable<FacilityLog>, List<FacilityLogDTO>>
 				(list);
 		}
 
-		public void Update(FacilityLogDTO item)
+		public async Task Update(FacilityLogDTO item)
 		{
-			Database.Logs.Update(Mapper.Map<FacilityLogDTO, FacilityLog>(item));
-			Database.Save();
+			await unitOfWork.FacilityLogs.Update(mapper.Map<FacilityLogDTO, FacilityLog>(item));
+			await unitOfWork.SaveAsync();
 		}
 
-		public void DeleteByFacility(int facilityId)
+		public async Task DeleteByFacility(int facilityId)
 		{
-			var logs = GetByFacilityId(facilityId);
+			var logs = await GetWithFilter(x => x.FacilityId == facilityId);
 			foreach (var item in logs)
 			{
-				Database.Logs.Delete(item.Id);
+				await unitOfWork.FacilityLogs.Delete(item.Id);
 			}
-			Database.Save();
+			await unitOfWork.SaveAsync();
 		}
 
-		public ICollection<FacilityLogDTO> GetPage(int PageNumber, int PageSize)
+		public async Task<ICollection<FacilityLogDTO>> GetPage(int pageNumber, int pageSize)
 		{
-			var list = Database.Logs.GetAll()
-				.OrderBy(on => on.ChangeDate)
-				.Skip((PageNumber - 1) * PageSize)
-				.Take(PageSize)
+			var list = (await unitOfWork.FacilityLogs.GetAll())
+				.OrderByDescending(on => on.ChangeDate)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
 				.ToList();
-			return Mapper.Map<IEnumerable<FacilityLog>, List<FacilityLogDTO>>
+			return mapper.Map<IEnumerable<FacilityLog>, List<FacilityLogDTO>>(list);
+		}
+
+		public async Task<ICollection<FacilityLogDTO>> GetByFacilityPage(int facilityId, int pageNumber, int pageSize)
+		{
+			var facility = await unitOfWork.Facilities.Get(facilityId);
+			if (facility == null)
+				throw new ValidationException();
+			var list = (await unitOfWork.FacilityLogs.GetAll())
+				.Where(x => x.FacilityId == facilityId)
+				.OrderByDescending(on => on.ChangeDate)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
+				.ToList();
+
+			return mapper.Map<IEnumerable<FacilityLog>, List<FacilityLogDTO>>
 				(list);
 		}
 	}

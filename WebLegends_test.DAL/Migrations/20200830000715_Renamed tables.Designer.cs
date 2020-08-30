@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebLegends_test.DAL.Context;
 
 namespace WebLegends_test.DAL.Migrations
 {
     [DbContext(typeof(EfContext))]
-    partial class EfContextModelSnapshot : ModelSnapshot
+    [Migration("20200830000715_Renamed tables")]
+    partial class Renamedtables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +44,7 @@ namespace WebLegends_test.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StatusId")
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -78,6 +80,8 @@ namespace WebLegends_test.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
 
                     b.ToTable("FacilityLogs");
                 });
@@ -118,8 +122,19 @@ namespace WebLegends_test.DAL.Migrations
             modelBuilder.Entity("WebLegends_test.DAL.Entities.Facility", b =>
                 {
                     b.HasOne("WebLegends_test.DAL.Entities.FacilityStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId");
+                        .WithMany("Facilities")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebLegends_test.DAL.Entities.FacilityLog", b =>
+                {
+                    b.HasOne("WebLegends_test.DAL.Entities.Facility", "Facility")
+                        .WithMany("FacilityLogs")
+                        .HasForeignKey("FacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

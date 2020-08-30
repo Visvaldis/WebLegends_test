@@ -8,10 +8,9 @@ namespace WebLegends_test.DAL.Interfaces
 {
 	public interface IUnitOfWork :IDisposable
 	{
-		IRepository<Facility> Facilities { get; }
-		IRepository<FacilityLog> Logs { get; }
-		IRepository<FacilityStatus> Statuses { get; }
-		void Save();
+		IRepositoryAsync<Facility, int> Facilities { get; }
+		IRepositoryAsync<FacilityLog, int> FacilityLogs { get; }
+		IRepositoryAsync<FacilityStatus, int> FacilityStatuses { get; }
 		Task SaveAsync();
 	}
 }

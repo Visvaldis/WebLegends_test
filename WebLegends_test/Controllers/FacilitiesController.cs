@@ -14,7 +14,7 @@ namespace WebLegends_test.Controllers
 	[ApiController]
 	public class FacilitiesController : ControllerBase
 	{
-		IFacilityService facilityService;
+		private readonly IFacilityService facilityService;
 		//	IFacilityStatusService statusService;
 
 		public FacilitiesController(IFacilityService _facilityService)
@@ -24,11 +24,11 @@ namespace WebLegends_test.Controllers
 		}
 		// GET: api/statuses
 		[HttpGet]
-		public ActionResult<IEnumerable<FacilityDTO>> Get()
+		public async Task<ActionResult<IEnumerable<FacilityDTO>>> Get()
 		{
 			try
 			{
-				var facilities = facilityService.GetAll();
+				var facilities = await facilityService.GetAll();
 				return Ok(facilities);
 			}
 			catch (Exception ex)
@@ -39,16 +39,16 @@ namespace WebLegends_test.Controllers
 
 		// GET api/statuses/5
 		[HttpGet("{id}")]
-		public ActionResult<FacilityDTO> GetById(int id)
+		public async Task<ActionResult<FacilityDTO>> GetById(int id)
 		{
 			if (id <= 0)
 				return BadRequest("Id is negative");
 			try
 			{
-				var facility = facilityService.Get(id);
+				var facility = await facilityService.Get(id);
 				return Ok(facility);
 			}
-			catch (ValidationException ex)
+			catch (ValidationException)
 			{
 				return NotFound();
 			}
@@ -56,13 +56,15 @@ namespace WebLegends_test.Controllers
 
 		// POST api/statuses
 		[HttpPost]
-		public ActionResult Create([FromBody] FacilityDTO item)
+		public async Task<ActionResult> Create([FromBody] FacilityDTO item)
 		{
 			if (!ModelState.IsValid)
-				return BadRequest(ModelState);
+			{
+				return BadRequest(ModelState.ValidationState);
+			}
 			try
 			{
-				int facilityId = facilityService.Add(item);
+				int facilityId = await facilityService.Create(item);
 				item.Id = facilityId;
 
 				return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
@@ -75,74 +77,74 @@ namespace WebLegends_test.Controllers
 
 		// PUT api/statuses/5
 		[HttpPut("{id}")]
-		public ActionResult Update(int id, [FromBody] FacilityDTO item)
+		public async Task<ActionResult> Update(int id, [FromBody] FacilityDTO item)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
-			if (!facilityService.Exist(id))
+			if ((await facilityService.Exist(id)) == false)
 				return NotFound();
 			//	int statusId = statusService.GetByName(item.Status.Name).Id;
 			item.Id = id;
 			//	item.Status.Id = statusId;
-			facilityService.Update(item);
+			await facilityService.Update(item);
 			return Ok();
 		}
 
 		// DELETE api/statuses/5
 		[HttpDelete("{id}")]
-		public ActionResult Delete(int id)
+		public async Task<ActionResult> Delete(int id)
 		{
 			if (id < 0)
 				return BadRequest("Id is negative");
-			if (!facilityService.Exist(id))
+			if ((await facilityService.Exist(id)) == false)
 				return NotFound();
 
-			facilityService.Delete(id);
+			await facilityService.Delete(id);
 			return NoContent();
 
 		}
 
 		[HttpGet("search/{name}")]
-		public ActionResult<IEnumerable<FacilityDTO>> GetByName(string name)
+		public async Task<ActionResult<IEnumerable<FacilityDTO>>> GetByName(string name)
 		{
 			if (name is null || name == "")
 				return BadRequest("Name is null");
 			try
 			{
-				var facilities = facilityService.GetByName(name);
+				var facilities = await facilityService.GetByName(name);
 
 				return Ok(facilities);
 			}
-			catch (ValidationException ex)
+			catch (ValidationException)
 			{
 				return NotFound();
 			}
 		}
 
 		[HttpGet("status/{name}")]
-		public ActionResult<IEnumerable<FacilityDTO>> GetByStatus(string name)
+		public async Task<ActionResult<IEnumerable<FacilityDTO>>> GetByStatus(string name)
 		{
 			if (name is null || name == "")
 				return BadRequest("Name is null");
 			try
 			{
-				var facilities = facilityService.GetByStatus(name);
+				var facilities = await facilityService.GetByStatus(name);
 
 				return Ok(facilities);
 			}
-			catch (ValidationException ex)
+			catch (ValidationException)
 			{
 				return NotFound();
 			}
 		}
 
 		[HttpGet("page")]
-		public ActionResult<IEnumerable<FacilityDTO>> GetPage(int number, int size)
+		public async Task<ActionResult<IEnumerable<FacilityDTO>>> GetPage(int pageNumber, int pageSize)
 		{
-			if (number < 0 || size < 0)
-				return BadRequest("Number or size is negative");
+			if (pageNumber < 0 || pageSize < 0)
+				return BadRequest("Page number or size is negative");
 
-			var facilities = facilityService.GetPage(number, size);
+			var facilities = await facilityService.GetPage(pageNumber, pageSize);
 			return Ok(facilities);
 		}
 	}

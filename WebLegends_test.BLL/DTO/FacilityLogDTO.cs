@@ -7,7 +7,7 @@ namespace WebLegends_test.BLL.DTO
 	public class FacilityLogDTO
 	{
 		public int Id { get; set; }
-		public virtual FacilityDTO Facility { get; set; }
+		public FacilityDTO Facility { get; set; }
 		public string FieldName { get; set; }
 		public string OldValue { get; set; }
 		public string NewValue { get; set; }

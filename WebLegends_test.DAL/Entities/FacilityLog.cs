@@ -8,7 +8,7 @@ namespace WebLegends_test.DAL.Entities
 	public class FacilityLog
 	{
 		public int Id { get; set; }
-		public virtual Facility Facility { get; set; }
+		public int FacilityId { get; set; }
 		public string FieldName { get; set; }
 		public string OldValue { get; set; }
 		public string NewValue { get; set; }

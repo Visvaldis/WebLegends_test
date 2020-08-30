@@ -5,7 +5,7 @@ import {Status} from "../../models/status";
 import {FacilityService} from "../../services/FacilityService";
 import {NgModule, ViewChild} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {FormControl, FormGroup, ReactiveFormsModule, FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, ReactiveFormsModule, FormsModule, FormBuilder, Validators} from '@angular/forms';
 import {NgSelectModule, NgOption} from '@ng-select/ng-select';
 
 @Component({
@@ -15,18 +15,29 @@ import {NgSelectModule, NgOption} from '@ng-select/ng-select';
 })
 export class HomeComponent implements OnInit {
   facility: Facility = new Facility();   // изменяемый товар
-  facilities: Facility[];                // массив товаров
+  facilities: Facility[] = [];                // массив товаров
   statuses: Status[];
   tableMode = true;          // табличный режим
   pageNumber = 1;
   pageSize = 10;
+  searchStr: string = null;
+  createForm: FormGroup;
 
-  constructor(private facilityService: FacilityService, private statusService: StatusService) { }
+  constructor(private facilityService: FacilityService, private statusService: StatusService,  private fb: FormBuilder) { }
 
   ngOnInit() {
     this.loadFacilities();    // загрузка данных при старте компонента
     this.loadStatuses();
-    console.log(this.facilities)
+
+    this.createForm = this.fb.group(
+      {
+        name: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        phone: ['', [Validators.required, Validators.minLength(10)]],
+        address: ['', [Validators.required]],
+        status: ['', [Validators.required]]
+      }
+    );
 
   }
   // получаем данные через сервис
@@ -41,8 +52,21 @@ export class HomeComponent implements OnInit {
   // сохранение данных
   save() {
     if (this.facility.id == null) {
+      this.facility.name = this.createForm.controls['name'].value;
+      this.facility.phone_Number = this.createForm.controls['phone'].value;
+      this.facility.email = this.createForm.controls['email'].value;
+      this.facility.address = this.createForm.controls['address'].value;
+      this.facility.status = this.createForm.controls['status'].value;
+
       this.facilityService.createFacility(this.facility)
-        .subscribe((data: Facility) => this.facilities.push(data));
+        .subscribe((data: Facility) =>
+          {
+             this.facilities.push(data)
+          },
+          error => {
+              alert(error.message);
+          }
+        );
     } else {
       this.facilityService.updateFacility(this.facility)
         .subscribe(() => this.loadFacilities());
@@ -65,6 +89,13 @@ export class HomeComponent implements OnInit {
     this.tableMode = false;
   }
 
+  search(){
+    this.facilityService.searchFacilities(this.searchStr)
+      .subscribe((data: Facility[]) => {
+        this.facilities = data
+        console.log(data);
+      });
+  }
 
   nextpage() {
     this.pageNumber+=1;
@@ -73,6 +104,11 @@ export class HomeComponent implements OnInit {
 
   previouspage() {
     this.pageNumber-=1;
+    this.loadFacilities();
+  }
+
+  cancelSearch() {
+    this.searchStr = null;
     this.loadFacilities();
   }
 }

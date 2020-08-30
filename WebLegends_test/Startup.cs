@@ -24,13 +24,7 @@ namespace WebLegend_test
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // получаем строку подключения из файла конфигурации
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddUnitOfWorkService(connection);
-
-            services.AddScoped<IFacilityService, FacilityService>();
-            services.AddScoped<IFacilityLogService, FacilityLogService>();
-            services.AddScoped<IFacilityStatusService, FacilityStatusService>();
+            services.RegisterDomainServices(Configuration);
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory

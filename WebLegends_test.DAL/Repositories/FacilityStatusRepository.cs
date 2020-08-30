@@ -3,63 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using WebLegends_test.DAL.Context;
 using WebLegends_test.DAL.Entities;
 using WebLegends_test.DAL.Interfaces;
 
 namespace WebLegends_test.DAL.Repositories
 {
-	class FacilityStatusRepository : IRepository<FacilityStatus>
+	class FacilityStatusRepository : BaseRepositoryAsync<FacilityStatus, int>
 	{
-		private EfContext db;
-		public FacilityStatusRepository(EfContext context)
+		public FacilityStatusRepository(EfContext context) : base(context)
+		{ }
+		public override async Task<int> Create(FacilityStatus item)
 		{
-			this.db = context;
-		}
-		public int Create(FacilityStatus item)
-		{
-			db.Statuses.Add(item);
-			db.SaveChanges();
+			db.FacilityStatuses.Add(item);
+			await db.SaveChangesAsync();
 			return item.Id;
 		}
 
-		public void Delete(int id)
-		{
-			FacilityStatus status = db.Statuses.Find(id);
-			if (status != null)
-				db.Statuses.Remove(status);
-		}
-
-		public IEnumerable<FacilityStatus> Find(Expression<Func<FacilityStatus, bool>> predicate)
-		{
-			return db.Statuses.Where(predicate).ToList();
-		}
-
-		public FacilityStatus Get(int id)
-		{
-			return GetAllQuary()
-				.FirstOrDefault(x => x.Id == id);
-		}
-
-		public IQueryable<FacilityStatus> GetAll()
-		{
-			return GetAllQuary();
-		}
-
-		public void Update(FacilityStatus item)
-		{
-			var entity = db.Statuses.Find(item.Id);
-			if (entity == null)
-			{
-				return;
-			}
-			db.Entry(entity).CurrentValues.SetValues(item);
-		}
 
 
-		private IQueryable<FacilityStatus> GetAllQuary()
-		{
-			return db.Statuses;
-		}
+		//public override async Task Update(FacilityStatus item)
+		//{
+		//	var entity = db.FacilityStatuses.Filter(item.Id);
+		//	if (entity == null)
+		//	{
+		//		return;
+		//	}
+		//	db.Entry(entity).CurrentValues.SetValues(item);
+		//}
+
 	}
 }

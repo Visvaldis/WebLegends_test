@@ -14,7 +14,7 @@ namespace WebLegends_test.Controllers
 	[ApiController]
 	public class FacilitiesLogController : ControllerBase
 	{
-		IFacilityLogService logService;
+		private readonly IFacilityLogService logService;
 		public FacilitiesLogController(IFacilityLogService service)
 		{
 			logService = service;
@@ -23,11 +23,11 @@ namespace WebLegends_test.Controllers
 		}
 		// GET: api/statuses
 		[HttpGet]
-		public ActionResult<IEnumerable<FacilityLogDTO>> Get()
+		public async Task<ActionResult<IEnumerable<FacilityLogDTO>>> Get()
 		{
 			try
 			{
-				var logs = logService.GetAll();
+				var logs = await logService.GetAll();
 				return Ok(logs);
 			}
 			catch (Exception ex)
@@ -38,16 +38,16 @@ namespace WebLegends_test.Controllers
 
 		// GET api/statuses/5
 		[HttpGet("{id}")]
-		public ActionResult<FacilityStatusDTO> GetById(int id)
+		public async Task<ActionResult<FacilityStatusDTO>> GetById(int id)
 		{
 			if (id <= 0)
 				return BadRequest("Id is negative");
 			try
 			{
-				var log = logService.Get(id);
+				var log = await logService.Get(id);
 				return Ok(log);
 			}
-			catch (ValidationException ex)
+			catch (ValidationException)
 			{
 				return NotFound();
 			}
@@ -55,53 +55,57 @@ namespace WebLegends_test.Controllers
 
 		// DELETE api/statuses/5
 		[HttpDelete("{id}")]
-		public ActionResult Delete(int id)
+		public async Task<ActionResult> Delete(int id)
 		{
 			if (id < 0)
 				return BadRequest("Id is negative");
-			if (!logService.Exist(id))
+			if ((await logService.Exist(id)) == false)
 				return NotFound();
 
-			logService.Delete(id);
+			await logService.Delete(id);
 			return NoContent();
 
 		}
 
-		[HttpGet("facility/{name:alpha}")]
-		public ActionResult<IEnumerable<FacilityLogDTO>> GetByFacility(string name)
+
+		[HttpGet("facility/{facilityId}/page")]
+		public async Task<ActionResult<IEnumerable<FacilityLogDTO>>> GetByFacilityPage(int facilityId, int pageNumber, int pageSize)
 		{
-			if (name is null || name == "")
-				return BadRequest("Name is null");
+			if (facilityId <= 0)
+				return BadRequest("Id is negative");
+			if (pageNumber < 0 || pageSize < 0)
+				return BadRequest("Page number or size is negative");
 			try
 			{
-				var facilities = logService.GetByFacility(name);
+				var facilities = await logService.GetByFacilityPage(facilityId, pageNumber, pageSize);
 				return Ok(facilities);
 			}
-			catch (ValidationException ex)
+			catch (ValidationException)
 			{
 				return NotFound();
 			}
 		}
 
 		[HttpDelete("facility/{id}")]
-		public ActionResult<IEnumerable<FacilityLogDTO>> DeleteByFacility(int id)
+		public async Task<ActionResult<IEnumerable<FacilityLogDTO>>> DeleteByFacility(int id)
 		{
 			if (id < 0)
 				return BadRequest("Id is negative");
-			logService.DeleteByFacility(id);
+			await logService.DeleteByFacility(id);
 			return NoContent();
 
 		}
 
 		[HttpGet("page")]
-		public ActionResult<IEnumerable<FacilityLogDTO>> GetPage(int number, int size)
+		public async Task<ActionResult<IEnumerable<FacilityLogDTO>>> GetPage(int pageNumber, int pageSize)
 		{
-			if (number < 0 || size < 0)
-				return BadRequest("Number or size is negative");
+			if (pageNumber < 0 || pageSize < 0)
+				return BadRequest("Page number or size is negative");
 
-			var facilities = logService.GetPage(number, size);
+			var facilities = await logService.GetPage(pageNumber, pageSize);
 			return Ok(facilities);
 		}
-
 	}
+
 }
+

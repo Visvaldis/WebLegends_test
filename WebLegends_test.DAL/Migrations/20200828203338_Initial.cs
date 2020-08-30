@@ -8,7 +8,7 @@ namespace WebLegends_test.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Statuses",
+                name: "FacilityStatuses",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -38,13 +38,13 @@ namespace WebLegends_test.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_Facilities_Statuses_StatusId",
                         column: x => x.StatusId,
-                        principalTable: "Statuses",
+                        principalTable: "FacilityStatuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Logs",
+                name: "FacilityLogs",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -67,17 +67,17 @@ namespace WebLegends_test.DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Statuses",
+                table: "FacilityStatuses",
                 columns: new[] { "Id", "Name" },
                 values: new object[] { 1, "Active" });
 
             migrationBuilder.InsertData(
-                table: "Statuses",
+                table: "FacilityStatuses",
                 columns: new[] { "Id", "Name" },
                 values: new object[] { 2, "Inactive" });
 
             migrationBuilder.InsertData(
-                table: "Statuses",
+                table: "FacilityStatuses",
                 columns: new[] { "Id", "Name" },
                 values: new object[] { 3, "OnHold" });
 
@@ -88,20 +88,20 @@ namespace WebLegends_test.DAL.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Logs_FacilityId",
-                table: "Logs",
+                table: "FacilityLogs",
                 column: "FacilityId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Logs");
+                name: "FacilityLogs");
 
             migrationBuilder.DropTable(
                 name: "Facilities");
 
             migrationBuilder.DropTable(
-                name: "Statuses");
+                name: "FacilityStatuses");
         }
     }
 }

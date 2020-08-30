@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using WebLegends_test.BLL.DTO;
 using WebLegends_test.BLL.Infrastructure;
 using WebLegends_test.BLL.Interfaces;
@@ -12,112 +13,111 @@ using WebLegends_test.DAL.Interfaces;
 
 namespace WebLegends_test.BLL.Services
 {
-	public class FacilityService : IFacilityService
+	public class FacilityService : BaseService, IFacilityService
 	{
-		IUnitOfWork Database { get; set; }
-		IMapper Mapper { get; set; }
-		public FacilityService(IUnitOfWork uow)
-		{
-			Database = uow;
-			Mapper = Mappers.FacilityMapper;
-		}
-		public int Add(FacilityDTO item)
+		public FacilityService(IUnitOfWork unitOfWork) : base(unitOfWork)
+		{ }
+
+		public async Task<int> Create(FacilityDTO item)
 		{
 			if (item == null)
 				throw new ArgumentNullException("Facility is null. Try again.");
-			var facility = Mapper.Map<FacilityDTO, Facility>(item);
-			int id = Database.Facilities.Create(facility);
+			var facility = mapper.Map<FacilityDTO, Facility>(item);
+			int id = await unitOfWork.Facilities.Create(facility);
 			return id;
 		}
 
-		public void Delete(int id)
+		public async Task Delete(int id)
 		{
-			Database.Facilities.Delete(id);
-			Database.Save();
+			await unitOfWork.Facilities.Delete(id);
+			await unitOfWork.SaveAsync();
 		}
 
 		public void Dispose()
 		{
-			Database.Dispose();
+			unitOfWork.Dispose();
 		}
 
-		public bool Exist(int id)
+		public async Task<bool> Exist(int id)
 		{
-			var facility = Database.Facilities.Get(id);
+			var facility = await unitOfWork.Facilities.Get(id);
 			return !(facility == null);
 		}
 
-		public FacilityDTO Get(int id)
+		public async Task<FacilityDTO> Get(int id)
 		{
-			var facility = Database.Facilities.Get(id);
+			var facility = await unitOfWork.Facilities.Get(id);
 			if (facility == null)
 				throw new ValidationException("Facility is not found");
 
-			return Mapper.Map<Facility, FacilityDTO>(facility);
+			return mapper.Map<Facility, FacilityDTO>(facility);
 
 		}
 
-		public ICollection<FacilityDTO> GetAll()
+		public async Task<ICollection<FacilityDTO>> GetAll()
 		{
-			var query = Database.Facilities.GetAll();
-			var facilities = query.ToList();
-			return Mapper.Map<IEnumerable<Facility>, List<FacilityDTO>>(facilities);
+			var facilities = await unitOfWork.Facilities.GetAll();
+			return mapper.Map<IEnumerable<Facility>, List<FacilityDTO>>(facilities);
 		}
 
-		public ICollection<FacilityDTO> GetWithFilter(Expression<Func<Facility, bool>> filter)
+		public async Task<ICollection<FacilityDTO>> GetWithFilter(Expression<Func<Facility, bool>> filter)
 		{
-			var a = Database.Facilities.Find(filter);
-			var list = a.AsEnumerable<Facility>();
-			return Mapper.Map<IEnumerable<Facility>, List<FacilityDTO>>
+			var list = await unitOfWork.Facilities.Filter(filter);
+			return mapper.Map<IEnumerable<Facility>, List<FacilityDTO>>
 				(list);
 		}
 
 
-		public ICollection<FacilityDTO> GetByName(string name)
+		public async Task<ICollection<FacilityDTO>> GetByName(string name)
 		{
-			return GetWithFilter(x => x.Name.Contains(name));
+			return await GetWithFilter(x => x.Name.Contains(name));
 		}
 
-		public void Update(FacilityDTO item)
+		public async Task Update(FacilityDTO item)
 		{
-			var oldItem = Database.Facilities.Get(item.Id);
-			var newItem = Mapper.Map<FacilityDTO, Facility>(item);
-			var props = typeof(FacilityDTO).GetProperties();
+			var oldItem = await unitOfWork.Facilities.Get(item.Id);
+			var newItem = mapper.Map<FacilityDTO, Facility>(item);
+
 			List<FacilityLog> logs = new List<FacilityLog>();
 			foreach (var prop in oldItem.GetType().GetProperties())
 			{
+				if (prop.Name == "FacilityLogs") continue;
 				var oldOne = prop.GetValue(oldItem, null);
 				var newOne = prop.GetValue(newItem);
-				if(!oldOne.Equals(newOne))
+				if (!oldOne.Equals(newOne))
 				{
 					logs.Add(
-						new FacilityLog { Facility=newItem, FieldName=prop.Name,
-							NewValue=newOne.ToString(), OldValue=oldOne.ToString(), 
-							ChangeDate=DateTime.Now });
+						new FacilityLog
+						{
+							FacilityId = newItem.Id,
+							FieldName = prop.Name,
+							NewValue = newOne.ToString(),
+							OldValue = oldOne.ToString(),
+							ChangeDate = DateTime.Now
+						});
 				}
 			}
-			Database.Facilities.Update(newItem);
-			Database.Save();
+			await unitOfWork.Facilities.Update(newItem);
+			await unitOfWork.SaveAsync();
 			foreach (var log in logs)
 			{
-				Database.Logs.Create(log);
+				await unitOfWork.FacilityLogs.Create(log);
 			}
 		}
 
-		public ICollection<FacilityDTO> GetByStatus(string status)
+		public async Task<ICollection<FacilityDTO>> GetByStatus(string status)
 		{
-			return GetWithFilter(x => x.Status.Name == status);
+			return await GetWithFilter(x => x.Status.Name == status);
 		}
 
-		public ICollection<FacilityDTO> GetPage(int PageNumber, int PageSize)
+		public async Task<ICollection<FacilityDTO>> GetPage(int pageNumber, int pageSize)
 		{
-			var query = Database.Facilities.GetAll();
-			var page = query.OrderBy(on => on.Name)
-				.Skip((PageNumber - 1) * PageSize)
-				.Take(PageSize);
+			var query = await unitOfWork.Facilities.GetAll();
+			var page = query.OrderByDescending(on => on.Name)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize);
 			var list = page.ToList();
-			return Mapper.Map<IEnumerable<Facility>, List<FacilityDTO>>
-				(list);
+			return mapper.Map<IEnumerable<Facility>, List<FacilityDTO>>(list);
 		}
 	}
 }

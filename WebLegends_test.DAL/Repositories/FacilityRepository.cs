@@ -4,75 +4,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using WebLegends_test.DAL.Context;
 using WebLegends_test.DAL.Entities;
 using WebLegends_test.DAL.Interfaces;
 
 namespace WebLegends_test.DAL.Repositories
 {
-	class FacilityRepository : IRepository<Facility>
+	class FacilityRepository : BaseRepositoryAsync<Facility, int>
 	{
-		private EfContext db;
-		public FacilityRepository(EfContext context)
+
+		public FacilityRepository(EfContext context) :base(context)
+		{ }
+		public override async Task<int> Create(Facility item)
 		{
-			this.db = context;
-		}
-		public int Create(Facility item)
-		{
-			var status = db.Statuses.FirstOrDefault(t => t.Name == item.Status.Name);
+			var status = db.FacilityStatuses.FirstOrDefault(t => t.Name == item.Status.Name);
 			if (status != null)
 			{
 				item.Status = status;
-
 			}
 			db.Facilities.Add(item);
-			db.SaveChanges();
+			await db.SaveChangesAsync();
 			return item.Id;
 		}
 
-		public void Delete(int id)
+		public override async Task Update(Facility item)
 		{
-			Facility facility = db.Facilities.Find(id);
-			if (facility != null)
-				db.Facilities.Remove(facility);
-		}
-
-		public IEnumerable<Facility> Find(Expression<Func<Facility, bool>> predicate)
-		{
-			return db.Facilities.Where(predicate).ToList();
-		}
-
-		public Facility Get(int id)
-		{
-			return GetAllQuary()
-				.FirstOrDefault(x => x.Id == id);
-		}
-
-		public IQueryable<Facility> GetAll()
-		{
-			return GetAllQuary();
-		}
-
-		public void Update(Facility item)
-		{
-			var entity = db.Facilities.Find(item.Id);
+			var entity = await db.Facilities.FindAsync(item.Id);
 			if (entity == null)
 			{
 				return;
 			}
-			var status = db.Statuses.FirstOrDefault(t => t.Name == item.Status.Name);
+			var status = await db.FacilityStatuses.FirstOrDefaultAsync(t => t.Name == item.Status.Name);
 			if (status != null)
 			{
 				entity.Status = status;
-
 			}
 			db.Entry(entity).CurrentValues.SetValues(item);
 		}
-
-
-		private IQueryable<Facility> GetAllQuary()
+		public override IQueryable<Facility> GetAllQuary()
 		{
-			return db.Facilities.Include(x => x.Status);
+			return base.GetAllQuary().Include(x=> x.Status);
 		}
 	}
 }

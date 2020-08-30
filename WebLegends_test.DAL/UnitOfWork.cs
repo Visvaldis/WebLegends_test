@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using WebLegends_test.DAL.Context;
 using WebLegends_test.DAL.Entities;
 using WebLegends_test.DAL.Interfaces;
+using WebLegends_test.DAL.Repositories;
 
-namespace WebLegends_test.DAL.Repositories
+namespace WebLegends_test.DAL
 {
 	public class UnitOfWork : IUnitOfWork
 	{
@@ -16,13 +17,13 @@ namespace WebLegends_test.DAL.Repositories
 			db = _context;
 
 		}
-		private EfContext db;
+		private readonly EfContext db;
 		private FacilityRepository facilitiesRepository;
 		private FacilityLogRepository logsRepository;
 		private FacilityStatusRepository statusesRepository;
 
 
-		public IRepository<Facility> Facilities
+		public IRepositoryAsync<Facility, int> Facilities
 		{
 			get
 			{
@@ -32,7 +33,7 @@ namespace WebLegends_test.DAL.Repositories
 			}
 		}
 
-		public IRepository<FacilityLog> Logs
+		public IRepositoryAsync<FacilityLog, int> FacilityLogs
 		{
 			get
 			{
@@ -42,7 +43,7 @@ namespace WebLegends_test.DAL.Repositories
 			}
 		}
 
-		public IRepository<FacilityStatus> Statuses
+		public IRepositoryAsync<FacilityStatus, int> FacilityStatuses
 		{
 			get
 			{
@@ -57,11 +58,6 @@ namespace WebLegends_test.DAL.Repositories
 			await db.SaveChangesAsync();
 		}
 
-
-		public void Save()
-		{
-			db.SaveChanges();
-		}
 
 		private bool disposed = false;
 		protected virtual void Dispose(bool disposing)

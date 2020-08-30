@@ -76,7 +76,7 @@ namespace WebLegends_test.DAL.Migrations
 
                     b.HasIndex("FacilityId");
 
-                    b.ToTable("Logs");
+                    b.ToTable("FacilityLogs");
                 });
 
             modelBuilder.Entity("WebLegends_test.DAL.Entities.FacilityStatus", b =>
@@ -92,7 +92,7 @@ namespace WebLegends_test.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("FacilityStatuses");
 
                     b.HasData(
                         new
