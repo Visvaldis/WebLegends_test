@@ -8,7 +8,7 @@ using WebLegends_test.DAL.Entities;
 
 namespace WebLegends_test.BLL.Interfaces
 {
-	public interface IFacilityStatusService:IService<FacilityStatusDTO>
+	public interface IFacilityStatusService : IService<FacilityStatusDTO>
 	{
 		Task<ICollection<FacilityStatusDTO>> GetWithFilter(Expression<Func<FacilityStatus, bool>> filter);
 		Task<FacilityStatusDTO> GetByName(string name);

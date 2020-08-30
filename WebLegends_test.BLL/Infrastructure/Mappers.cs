@@ -17,7 +17,7 @@ namespace WebLegends_test.BLL.Infrastructure
 				var mapperCfg = new MapperConfiguration(cfg =>
 				{
 					cfg.CreateMap<Facility, FacilityDTO>().ReverseMap();
-					cfg.CreateMap<FacilityStatus, FacilityStatusDTO>().ReverseMap();	
+					cfg.CreateMap<FacilityStatus, FacilityStatusDTO>().ReverseMap();
 					cfg.CreateMap<FacilityLog, FacilityLogDTO>().ReverseMap();
 
 

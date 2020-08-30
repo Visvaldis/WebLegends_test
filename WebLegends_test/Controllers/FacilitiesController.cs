@@ -144,7 +144,7 @@ namespace WebLegends_test.Controllers
 			try
 			{
 				var facilities = await facilityService.GetPage(pageNumber, pageSize);
-			return Ok(facilities);
+				return Ok(facilities);
 			}
 			catch (ValidationException)
 			{

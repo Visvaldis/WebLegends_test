@@ -8,7 +8,7 @@ using WebLegends_test.DAL.Entities;
 
 namespace WebLegends_test.BLL.Interfaces
 {
-	public interface IFacilityLogService :IService<FacilityLogDTO>
+	public interface IFacilityLogService : IService<FacilityLogDTO>
 	{
 		Task<ICollection<FacilityLogDTO>> GetWithFilter(Expression<Func<FacilityLog, bool>> filter);
 		Task DeleteByFacility(int facilityId);

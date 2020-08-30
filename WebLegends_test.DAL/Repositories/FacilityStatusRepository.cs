@@ -22,16 +22,5 @@ namespace WebLegends_test.DAL.Repositories
 		}
 
 
-
-		//public override async Task Update(FacilityStatus item)
-		//{
-		//	var entity = db.FacilityStatuses.Filter(item.Id);
-		//	if (entity == null)
-		//	{
-		//		return;
-		//	}
-		//	db.Entry(entity).CurrentValues.SetValues(item);
-		//}
-
 	}
 }

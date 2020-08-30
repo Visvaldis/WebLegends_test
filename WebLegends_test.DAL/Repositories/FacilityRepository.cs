@@ -14,7 +14,7 @@ namespace WebLegends_test.DAL.Repositories
 	class FacilityRepository : BaseRepositoryAsync<Facility, int>
 	{
 
-		public FacilityRepository(EfContext context) :base(context)
+		public FacilityRepository(EfContext context) : base(context)
 		{ }
 		public override async Task<int> Create(Facility item)
 		{
@@ -44,11 +44,11 @@ namespace WebLegends_test.DAL.Repositories
 		}
 		public override IQueryable<Facility> GetAllQuary()
 		{
-			return base.GetAllQuary().Include(x=> x.Status);
+			return base.GetAllQuary().Include(x => x.Status);
 		}
 		public async override Task<Facility> Get(int id)
 		{
-			return await GetAllQuary().FirstOrDefaultAsync( x=> x.Id == id);
+			return await GetAllQuary().FirstOrDefaultAsync(x => x.Id == id);
 		}
 	}
 }

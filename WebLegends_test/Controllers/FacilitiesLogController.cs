@@ -101,10 +101,10 @@ namespace WebLegends_test.Controllers
 		{
 			if (pageNumber < 0 || pageSize < 0)
 				return BadRequest("Page number or size is negative");
-			try 
-			{ 
-			var facilities = await logService.GetPage(pageNumber, pageSize);
-			return Ok(facilities);
+			try
+			{
+				var facilities = await logService.GetPage(pageNumber, pageSize);
+				return Ok(facilities);
 			}
 			catch (ValidationException)
 			{

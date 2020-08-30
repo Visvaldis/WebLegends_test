@@ -13,19 +13,19 @@ using WebLegends_test.DAL.Repositories;
 
 namespace WebLegends_test.BLL.Infrastructure
 {
-    public static class ServiceProviderExtensions
-    {
-        public static void RegisterDomainServices(this IServiceCollection services, IConfiguration configuration)            
-        {
-            string connectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<EfContext>(options =>
-                  options.UseSqlServer(connectionString));
+	public static class ServiceProviderExtensions
+	{
+		public static void RegisterDomainServices(this IServiceCollection services, IConfiguration configuration)
+		{
+			string connectionString = configuration.GetConnectionString("DefaultConnection");
+			services.AddDbContext<EfContext>(options =>
+				  options.UseSqlServer(connectionString));
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddScoped<IFacilityService, FacilityService>();
-            services.AddScoped<IFacilityLogService, FacilityLogService>();
-            services.AddScoped<IFacilityStatusService, FacilityStatusService>();
-        }
-    }
+			services.AddScoped<IFacilityService, FacilityService>();
+			services.AddScoped<IFacilityLogService, FacilityLogService>();
+			services.AddScoped<IFacilityStatusService, FacilityStatusService>();
+		}
+	}
 }

@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {FacilityModel} from "../../models/facility.model";
-import {StatusService} from "../../services/status.service";
-import {StatusModel} from "../../models/status.model";
-import {FacilityService} from "../../services/facility.service";
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FacilityModel } from "../../models/facility.model";
+import { StatusService } from "../../services/status.service";
+import { StatusModel } from "../../models/status.model";
+import { FacilityService } from "../../services/facility.service";
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-facility',
@@ -48,7 +48,7 @@ export class FacilityComponent implements OnInit {
     this.tableMode = false;
   }
 
-  search(){
+  search() {
     this.facilityService.search(this.searchStr)
       .subscribe((data: FacilityModel[]) => {
         this.facilities = data
@@ -57,12 +57,12 @@ export class FacilityComponent implements OnInit {
   }
 
   nextpage() {
-    this.pageNumber+=1;
+    this.pageNumber += 1;
     this.loadFacilities();
   }
 
   previouspage() {
-    this.pageNumber-=1;
+    this.pageNumber -= 1;
     this.loadFacilities();
   }
 

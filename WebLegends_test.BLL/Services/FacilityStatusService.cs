@@ -51,7 +51,7 @@ namespace WebLegends_test.BLL.Services
 
 		public async Task<FacilityStatusDTO> Get(int id)
 		{
-			var  status = await unitOfWork.FacilityStatuses.Get(id);
+			var status = await unitOfWork.FacilityStatuses.Get(id);
 			if (status == null)
 				throw new ValidationException("Status is not found");
 

@@ -1,9 +1,9 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
-import {FacilityModel} from "../../../models/facility.model";
-import {StatusModel} from "../../../models/status.model";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {FacilityService} from "../../../services/facility.service";
-import {StatusService} from "../../../services/status.service";
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { FacilityModel } from "../../../models/facility.model";
+import { StatusModel } from "../../../models/status.model";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FacilityService } from "../../../services/facility.service";
+import { StatusService } from "../../../services/status.service";
 import { EventEmitter } from '@angular/core';
 
 @Component({
@@ -20,7 +20,7 @@ export class AddFacilityComponent implements OnInit {
 
   @Output() canceled = new EventEmitter<any>();
 
-  constructor(private facilityService: FacilityService, private statusService: StatusService,  private fb: FormBuilder) { }
+  constructor(private facilityService: FacilityService, private statusService: StatusService, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.loadStatuses();
@@ -40,22 +40,21 @@ export class AddFacilityComponent implements OnInit {
       .subscribe((data: StatusModel[]) => this.statuses = data);
   }
 
- save(){
-      this.facility.name = this.createForm.controls['name'].value;
-      this.facility.phone_Number = this.createForm.controls['phone'].value;
-      this.facility.email = this.createForm.controls['email'].value;
-      this.facility.address = this.createForm.controls['address'].value;
-      this.facility.status = this.createForm.controls['status'].value;
+  save() {
+    this.facility.name = this.createForm.controls['name'].value;
+    this.facility.phone_Number = this.createForm.controls['phone'].value;
+    this.facility.email = this.createForm.controls['email'].value;
+    this.facility.address = this.createForm.controls['address'].value;
+    this.facility.status = this.createForm.controls['status'].value;
 
-      this.facilityService.create(this.facility)
-        .subscribe((data: FacilityModel) =>
-          {
-            this.cancel()
-          },
-          error => {
-            alert(error.message);
-          }
-        );
+    this.facilityService.create(this.facility)
+      .subscribe((data: FacilityModel) => {
+        this.cancel()
+      },
+        error => {
+          alert(error.message);
+        }
+      );
   }
 
   cancel() {

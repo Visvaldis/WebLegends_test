@@ -8,9 +8,9 @@ describe('FacilityRowComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FacilityRowComponent ]
+      declarations: [FacilityRowComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

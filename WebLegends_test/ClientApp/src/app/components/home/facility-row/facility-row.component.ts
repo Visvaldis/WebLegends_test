@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FacilityModel} from "../../../models/facility.model";
-import {StatusModel} from "../../../models/status.model";
-import {FacilityService} from "../../../services/facility.service";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FacilityModel } from "../../../models/facility.model";
+import { StatusModel } from "../../../models/status.model";
+import { FacilityService } from "../../../services/facility.service";
 
 
 @Component({
@@ -18,12 +18,12 @@ export class FacilityRowComponent implements OnInit {
 
   constructor(private facilityService: FacilityService) { }
 
-  ngOnInit( ): void {
+  ngOnInit(): void {
   }
-// сохранение данных
+  // сохранение данных
   save() {
     this.facilityService.update(this.facility)
-        .subscribe(() => this.reload());
+      .subscribe(() => this.reload());
     this.changeMode = false;
   }
   editFacility(p: FacilityModel) {
