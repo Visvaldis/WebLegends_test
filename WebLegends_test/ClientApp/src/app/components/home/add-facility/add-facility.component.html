@@ -1,0 +1,53 @@
+<form class="login-form" [formGroup]="createForm" (ngSubmit)="save()">
+  <label>FacilityModel name</label>
+  <input type="text" formControlName="name"  placeholder="FacilityModel name" [(ngModel)]="facility.name" class="form-control" />
+  <div class="alert alert-danger"
+       *ngIf="createForm.controls['name'].invalid && createForm.controls['name'].touched">
+    Please enter valid name
+  </div>
+
+  <label>FacilityModel email</label>
+  <input type="email" formControlName="email" placeholder="FacilityModel email" [(ngModel)]="facility.email" class="form-control" />
+  <div class="alert alert-danger"
+       *ngIf="createForm.controls['email'].invalid && createForm.controls['email'].touched">
+    Please enter valid email
+  </div>
+
+
+  <label>FacilityModel phone</label>
+  <input type="tel" formControlName="phone" placeholder="FacilityModel phone" [(ngModel)]="facility.phone_Number" class="form-control" />
+  <div class="alert alert-danger"
+       *ngIf="createForm.controls['phone'].invalid && createForm.controls['phone'].touched">
+    Please enter valid phone
+  </div>
+
+
+  <label>FacilityModel address</label>
+  <input type="text" formControlName="address" placeholder="FacilityModel address" [(ngModel)]="facility.address" class="form-control" />
+  <div class="alert alert-danger"
+       *ngIf="createForm.controls['address'].invalid && createForm.controls['address'].touched">
+    Please enter valid address
+  </div>
+
+
+  <label>FacilityModel status</label>
+  <ng-select formControlName="status"
+             [items]="statuses"
+             bindLabel="name"
+             [multiple]="false"
+             placeholder="Choose status"
+             [(ngModel)]="facility.status">
+  </ng-select>
+  <div class="alert alert-danger"
+       *ngIf="createForm.controls['status'].invalid && createForm.controls['status'].touched">
+    Please select status
+  </div>
+  <button class="btn btn-success" [disabled]="(createForm.controls['name'].invalid ||
+                        createForm.controls['email'].invalid ||
+                        createForm.controls['phone'].invalid ||
+                        createForm.controls['address'].invalid ||
+                        createForm.controls['status'].invalid)" type="submit">Save</button>
+  <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning" />
+</form>
+<div>
+</div>

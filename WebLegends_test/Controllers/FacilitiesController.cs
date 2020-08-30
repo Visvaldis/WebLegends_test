@@ -76,16 +76,13 @@ namespace WebLegends_test.Controllers
 		}
 
 		// PUT api/statuses/5
-		[HttpPut("{id}")]
-		public async Task<ActionResult> Update(int id, [FromBody] FacilityDTO item)
+		[HttpPut]
+		public async Task<ActionResult> Update([FromBody] FacilityDTO item)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
-			if ((await facilityService.Exist(id)) == false)
+			if ((await facilityService.Exist(item.Id)) == false)
 				return NotFound();
-			//	int statusId = statusService.GetByName(item.Status.Name).Id;
-			item.Id = id;
-			//	item.Status.Id = statusId;
 			await facilityService.Update(item);
 			return Ok();
 		}
@@ -144,8 +141,15 @@ namespace WebLegends_test.Controllers
 			if (pageNumber < 0 || pageSize < 0)
 				return BadRequest("Page number or size is negative");
 
-			var facilities = await facilityService.GetPage(pageNumber, pageSize);
+			try
+			{
+				var facilities = await facilityService.GetPage(pageNumber, pageSize);
 			return Ok(facilities);
+			}
+			catch (ValidationException)
+			{
+				return NotFound();
+			}
 		}
 	}
 }

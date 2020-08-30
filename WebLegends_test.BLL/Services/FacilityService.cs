@@ -77,7 +77,18 @@ namespace WebLegends_test.BLL.Services
 		{
 			var oldItem = await unitOfWork.Facilities.Get(item.Id);
 			var newItem = mapper.Map<FacilityDTO, Facility>(item);
+			List<FacilityLog> logs = GetChangeLog(oldItem, newItem);
 
+			await unitOfWork.Facilities.Update(newItem);
+			await unitOfWork.SaveAsync();
+			foreach (var log in logs)
+			{
+				await unitOfWork.FacilityLogs.Create(log);
+			}
+		}
+
+		List<FacilityLog> GetChangeLog(Facility oldItem, Facility newItem)
+		{
 			List<FacilityLog> logs = new List<FacilityLog>();
 			foreach (var prop in oldItem.GetType().GetProperties())
 			{
@@ -97,12 +108,7 @@ namespace WebLegends_test.BLL.Services
 						});
 				}
 			}
-			await unitOfWork.Facilities.Update(newItem);
-			await unitOfWork.SaveAsync();
-			foreach (var log in logs)
-			{
-				await unitOfWork.FacilityLogs.Create(log);
-			}
+			return logs;
 		}
 
 		public async Task<ICollection<FacilityDTO>> GetByStatus(string status)

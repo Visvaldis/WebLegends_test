@@ -74,15 +74,14 @@ namespace WebLegends_test.Controllers
 		}
 
 		// PUT api/statuses/5
-		[HttpPut("{id}")]
-		public async Task<ActionResult> Update(int id, [FromBody] FacilityStatusDTO item)
+		[HttpPut]
+		public async Task<ActionResult> Update([FromBody] FacilityStatusDTO item)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
-			if ((await statusService.Exist(id)) == false)
+			if ((await statusService.Exist(item.Id)) == false)
 				return NotFound();
 
-			item.Id = id;
 			await statusService.Update(item);
 			return Ok();
 		}

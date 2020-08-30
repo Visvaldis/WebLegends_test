@@ -6,11 +6,11 @@ import {FacilityService} from "../../services/facility.service";
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: 'app-facility',
+  templateUrl: './facility.component.html',
+  styleUrls: ['./facility.component.css']
 })
-export class HomeComponent implements OnInit {
+export class FacilityComponent implements OnInit {
   facility: FacilityModel = new FacilityModel();   // изменяемый товар
   facilities: FacilityModel[] = [];                // массив товаров
   statuses: StatusModel[];

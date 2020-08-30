@@ -1,10 +1,10 @@
-import {Status} from "./status";
+import {StatusModel} from "./status.model";
 
-export class Facility {
+export class FacilityModel {
   public id: number;
   public name: string;
   public email: string;
   public phone_Number: string;
-  public status: Status;
+  public status: StatusModel;
   public address: string;
 }

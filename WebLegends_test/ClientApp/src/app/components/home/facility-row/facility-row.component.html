@@ -1,0 +1,33 @@
+<ng-template [ngIf]="changeMode == false" [ngIfElse]="edit">
+  <td><a [routerLink]="['/facility', facility.id]"> {{facility.name}} </a></td>
+  <td>{{facility.email}}</td>
+  <td>{{facility.phone_Number}}</td>
+  <td>{{facility.address}}</td>
+  <td>{{facility.status.name}}</td>
+  <td>
+    <button class="btn btn-sm btn-primary" (click)="editFacility(facility)">Change</button>
+    <button class="btn btn-sm btn-danger" (click)="delete(facility)">Delete</button>
+  </td>
+</ng-template>
+
+<!--шаблон для редактирования-->
+<ng-template #edit>
+
+  <td> <input type="text" [(ngModel)]="facility.name" class="form-control" /> </td>
+  <td> <input type="email" [(ngModel)]="facility.email" class="form-control" /> </td>
+  <td> <input style="max-width: 9rem;" type="tel" [(ngModel)]="facility.phone_Number"></td>
+  <td> <input type="text" [(ngModel)]="facility.address" class="form-control" /> </td>
+  <td>
+    <ng-select [items]="statuses"
+               bindLabel="name"
+               [multiple]="false"
+               placeholder="Choose status"
+               [(ngModel)]="facility.status">
+    </ng-select>
+  </td>
+
+  <td>
+    <input type="button" value="Save" (click)="save()" class="btn btn-sm btn-success" />
+    <input type="button" value="Cancel" (click)="cancel()" class="btn btn-sm btn-warning" />
+  </td>
+</ng-template>

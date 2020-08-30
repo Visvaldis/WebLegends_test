@@ -46,5 +46,9 @@ namespace WebLegends_test.DAL.Repositories
 		{
 			return base.GetAllQuary().Include(x=> x.Status);
 		}
+		public async override Task<Facility> Get(int id)
+		{
+			return await GetAllQuary().FirstOrDefaultAsync( x=> x.Id == id);
+		}
 	}
 }

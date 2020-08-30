@@ -2,9 +2,9 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
-import {Status} from "../models/status";
+import {StatusModel} from "../models/status.model";
 import {getAoiUrl} from "../config";
-import {Facility} from "../models/facility";
+import {FacilityModel} from "../models/facility.model";
 
 
 @Injectable()

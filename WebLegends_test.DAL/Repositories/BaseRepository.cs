@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -39,11 +40,9 @@ namespace WebLegends_test.DAL.Repositories
         }
 
 
-		public async Task<TEntity> Get(TKey id)
+		public virtual async Task<TEntity> Get(TKey id)
         {
-            var t = db.Model.FindEntityType(typeof(TEntity)).FindPrimaryKey().Properties;
-            
-            return await set.FindAsync(id);
+			return await set.FindAsync(id);
         }
 
         public async Task<IEnumerable<TEntity>> GetAll()
@@ -65,5 +64,6 @@ namespace WebLegends_test.DAL.Repositories
 		{
             return set;
 		}
+
 	}
 }
